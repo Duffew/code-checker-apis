@@ -8,7 +8,7 @@ const resultsModal = new bootstrap.Modal(document.getElementById("resultsModal")
 // wire up the button
 document.getElementById("status").addEventListener("click", e => getStatus(e));
 
-// create an asynchornous function to get data and display it in the console log in CDT
+// create an asynchornous function to get data and display it a modal
 async function getStatus(e) {
     const queryString = `${API_URL}?api_key=${API_KEY}`;
 
@@ -17,6 +17,23 @@ async function getStatus(e) {
     const data = await response.json();
 
     if (response.ok) {
-        console.log(data.expiry);
+        displayStatus(data);
     }
+    // add an exception
+    else {
+        throw new Error(data.error);
+    }
+}
+
+// create the displayStatus function which has been called above
+function displayStatus(data) {
+    let heading = "API Key Status";
+    let results = `<div>Your key is valid until</div>`;
+
+    results += `<div class="key-status">${data.expiry}</div>`
+
+    document.getElementById("resultsModalTitle").innerText = heading;
+    document.getElementById("results-content").innerHTML = results;
+
+    resultsModal.show()
 }
