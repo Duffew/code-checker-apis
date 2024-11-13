@@ -10,9 +10,28 @@ document.getElementById("status").addEventListener("click", e => getStatus(e));
 // wire up the 'Run Checks' button
 document.getElementById("submit").addEventListener("click", e => postForm(e));
 
+// create a function to return entries in the correct format
+function processOptions(form) {
+    // create a new array to store the data
+    let optArray = [];
+    // iterate through the form entries and push entries into new array
+    for (let entry of form.entries()) {
+        if (entry[0] === "options") {
+            optArray.push(entry[1]);
+        }
+    }
+    // delete the word "options" from the string
+    form.delete("options");
+    // append the optArray array with the data, sepatated by a comma and without the word "options"
+    form.append("options", optArray.join());
+
+    return form;
+
+}
+
 // create an asynchornous function to POST code and have it checked
 async function postForm(e) {
-    const form = new FormData(document.getElementById("checksform"));
+    const form = processOptions (new FormData(document.getElementById("checksform")));
 
     // pasted code from JSHint instructions - POST
     const response = await fetch(API_URL, {
