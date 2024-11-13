@@ -48,6 +48,7 @@ async function postForm(e) {
     if (response.ok) {
         displayErrors(data);
     } else {
+        displayException(data);
         throw new Error(data.error);
     }
 
@@ -89,7 +90,9 @@ async function getStatus(e) {
     }
     // add an exception
     else {
-        throw new Error(data.error);
+        displayException(data);
+        throw new Error(data.error); 
+       
     }
 }
 
@@ -99,6 +102,20 @@ function displayStatus(data) {
     let results = `<div>Your key is valid until</div>`;
 
     results += `<div class="key-status">${data.expiry}</div>`
+
+    document.getElementById("resultsModalTitle").innerText = heading;
+    document.getElementById("results-content").innerHTML = results;
+
+    resultsModal.show()
+}
+
+// create a displayException function which populates the modal with exception information
+
+function displayException(data) {
+    let heading = "An Exception Has Occured";
+    results = `<div>The API retirned status code ${data.status_code}</div>`;
+    results +=`<div>Error Number: <strong>${data.error_no}</strong></div>`;
+    results += `<div>Error Text: <strong>${data.error}</strong></div>`;
 
     document.getElementById("resultsModalTitle").innerText = heading;
     document.getElementById("results-content").innerHTML = results;
